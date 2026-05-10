@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Patient {
+  id             String   @id @default(uuid())
+  nome           String
+  documento      String   @unique
+  dataNascimento DateTime
+  createdAt      DateTime @default(now())
+
+  exams Exam[]
+
+  @@map("patients")
+}
+
+enum DicomModality {
+  CR
+  CT
+  DX
+  MG
+  MR
+  NM
+  OT
+  PT
+  RF
+  US
+  XA
+}
+
+model Exam {
+  id             String        @id @default(uuid())
+  idempotencyKey String        @unique
+  patientId      String
+  modalidade     DicomModality
+  dataExame      DateTime      @default(now())
+  createdAt      DateTime      @default(now())
+
+  patient Patient @relation(fields: [patientId], references: [id])
+
+  @@map("exams")
+}

@@ -1,0 +1,49 @@
+<div class="page-container">
+  <div class="header">
+    <h2>Novo Paciente</h2>
+    <a routerLink="/pacientes" class="btn-secondary">Voltar</a>
+  </div>
+
+  @if (apiError) {
+    <app-error-message [message]="apiError" (retry)="onSubmit()"></app-error-message>
+  }
+
+  <div class="form-container">
+    <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+      
+      <div class="form-group">
+        <label for="name">Nome Completo *</label>
+        <input id="name" type="text" formControlName="nome" placeholder="Ex: João da Silva">
+        @if (patientForm.get('nome')?.touched && patientForm.get('nome')?.errors) {
+          <div class="error-text">
+            {{ patientForm.get('nome')?.errors?.['zodError'] || 'Campo obrigatório' }}
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="document">CPF *</label>
+        <input id="document" type="text" formControlName="documento" placeholder="000.000.000-00" (input)="onDocumentInput($event)" maxlength="14">
+        @if (patientForm.get('documento')?.touched && patientForm.get('documento')?.errors) {
+          <div class="error-text">
+            {{ patientForm.get('documento')?.errors?.['zodError'] || 'Campo obrigatório' }}
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="birthDate">Data de Nascimento *</label>
+        <input id="birthDate" type="date" formControlName="dataNascimento">
+        @if (patientForm.get('dataNascimento')?.touched && patientForm.get('dataNascimento')?.errors) {
+          <div class="error-text">
+            {{ patientForm.get('dataNascimento')?.errors?.['zodError'] || 'Campo obrigatório' }}
+          </div>
+        }
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="patientForm.invalid || isSubmitting">
+        {{ isSubmitting ? 'Salvando...' : 'Salvar Paciente' }}
+      </button>
+    </form>
+  </div>
+</div>

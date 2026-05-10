@@ -1,0 +1,60 @@
+<div class="page-container">
+  <div class="header">
+    <h2>Pacientes</h2>
+    <a routerLink="/pacientes/novo" class="btn-primary">Novo Paciente</a>
+  </div>
+
+  @if (isLoading) {
+    <app-loading></app-loading>
+  }
+
+  @if (error) {
+    <app-error-message 
+      [message]="error" 
+      (retry)="loadPatients(currentPage)">
+    </app-error-message>
+  }
+
+  @if (!isLoading && !error) {
+    <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Documento</th>
+          <th>Data de Nascimento</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (patient of patients; track patient.id) {
+          <tr>
+            <td>{{ patient.nome }}</td>
+            <td>{{ patient.documento }}</td>
+            <td>{{ patient.dataNascimento | date:'dd/MM/yyyy' }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="3" class="text-center">Nenhum paciente encontrado.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <div class="pagination-info">
+        <span>
+          Mostrando {{ totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1 }} - 
+          {{ Math.min(currentPage * pageSize, totalItems) }} de {{ totalItems }} 
+        </span>
+      </div>
+      <div class="pagination-pages">
+        @for (page of pages; track page) {
+          <button 
+            [class.active]="page === currentPage"
+            (click)="loadPatients(page)">{{ page }}</button>
+        }
+      </div>
+    </div>
+    </div>
+  }
+</div>

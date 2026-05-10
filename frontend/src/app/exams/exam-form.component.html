@@ -1,0 +1,70 @@
+<div class="page-container">
+  <div class="header">
+    <h2>Novo Exame</h2>
+    <a routerLink="/exames" class="btn-secondary">Voltar</a>
+  </div>
+
+  @if (apiError) {
+    <app-error-message [message]="apiError" (retry)="onSubmit()"></app-error-message>
+  }
+  
+  <div class="form-container">
+    @if (isLoadingPatients) {
+      <app-loading></app-loading>
+    }
+
+    @if (!isLoadingPatients) {
+      <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
+      
+      <div class="form-group">
+        <label for="patientId">Paciente *</label>
+        <select id="patientId" formControlName="patientId">
+          <option value="" disabled selected>Selecione um paciente</option>
+          @for (p of patients; track p.id) {
+            <option [value]="p.id">{{ p.nome }} ({{ p.documento }})</option>
+          }
+        </select>
+        @if (examForm.get('patientId')?.touched && examForm.get('patientId')?.errors) {
+          <div class="error-text">
+            {{ examForm.get('patientId')?.errors?.['zodError'] || 'Selecione um paciente' }}
+          </div>
+        }
+        @if (patients.length === 0) {
+          <div class="info-text">
+            Nenhum paciente cadastrado. Cadastre um paciente primeiro.
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="modalidade">Modalidade DICOM *</label>
+        <select id="modalidade" formControlName="modalidade">
+          <option value="" disabled selected>Selecione uma modalidade</option>
+          @for (mod of modalities; track mod) {
+            <option [value]="mod">{{mod}} - {{ modalitiesLabels[mod] }}</option>
+          }
+        </select>
+        @if (examForm.get('modalidade')?.touched && examForm.get('modalidade')?.errors) {
+          <div class="error-text">
+            {{ examForm.get('modalidade')?.errors?.['zodError'] || 'Campo obrigatório' }}
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="dataExame">Data e Hora do Exame *</label>
+        <input id="dataExame" type="datetime-local" formControlName="dataExame">
+        @if (examForm.get('dataExame')?.touched && examForm.get('dataExame')?.errors) {
+          <div class="error-text">
+            {{ examForm.get('dataExame')?.errors?.['zodError'] || 'Campo obrigatório' }}
+          </div>
+        }
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="examForm.invalid || isSubmitting || patients.length === 0">
+        {{ isSubmitting ? 'Salvando...' : 'Salvar Exame' }}
+      </button>
+    </form>
+    }
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<!-- Layout Base Moderno -->
+<div class="app-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1>🩺 MedApp</h1>
+    </div>
+    <nav class="sidebar-nav">
+      <a routerLink="/pacientes" routerLinkActive="active" class="nav-item">
+        <span class="icon">👥</span> Pacientes
+      </a>
+      <a routerLink="/exames" routerLinkActive="active" class="nav-item">
+        <span class="icon">📋</span> Exames
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    <header class="topbar">
+      <h2>Sistema de Gestão de Exames DICOM</h2>
+    </header>
+    
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
